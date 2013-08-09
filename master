@@ -1,2 +1,2 @@
 #/home/projects/courses/spring_12/ee382n-16905/lib/time -v /home/projects/courses/spring_12/ee382n-16905/lib/lib1 util.v
-/home/projects/courses/spring_12/ee382n-16905/lib/time -v util.v basic.v sru.v
+/home/projects/courses/spring_12/ee382n-16905/lib/time -v util.v basic.v sru.v display.v color.v +v2k
