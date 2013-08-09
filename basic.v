@@ -7,6 +7,7 @@ module dff_59$(d, q, reset, clock, enable);
 	reg[58:0] q;
 
 	always @(posedge clock) begin if(enable) q = d; end
+	// async reset
 	always @(reset) begin if(reset) q = 0; end
 
 endmodule
@@ -20,6 +21,7 @@ module dff_32$(d, q, reset, clock, enable);
 	reg[31:0] q;
 
 	always @(posedge clock) begin if(enable) q = d; end
+	// async reset
 	always @(reset) begin if(reset) q = 0; end
 
 endmodule
