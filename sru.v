@@ -198,15 +198,15 @@ module TOP();
 		// Color
 		InheritFromParent = 1'b1;
 		m_primitiveUnitType = 7'd21; // make it match CSS_IDENT
-		m_value_ident = CSSValueWebkitLink;
+		m_value_ident = 32'h12345678;
 		m_state_applyPropertyToRegularStyle = 1'b1;
 		m_applyPropertyToVisitedLinkStyle = 1'b1;
 		parent_color_isvalid = 1'b1;
-		is_link_element = 1'b0;
+		is_link_element = 1'b1;
 		parent_color = CSSValueLimegreen;
 		parent_invalid_color = 32'd0;
 		document_text_color = CSSValueLimegreen;
-		document_visitedLink_color = CSSValueLimegreen;
+		document_visitedLink_color = CSSValueYellow;
 		document_link_color = CSSValueLimegreen;
 		document_activeLink_color = CSSValueLimegreen;
 		m_value_rgbcolor = 32'h1234ABCD;
