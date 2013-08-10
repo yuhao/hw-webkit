@@ -14,6 +14,7 @@ module color$(  clk,
 				document_visitedLink_color,
 				document_link_color,
 				document_activeLink_color,
+				m_value_rgbcolor,
 				CSSValueMenu,
 				CSSValueAqua,
 				CSSValueBlack,
@@ -71,9 +72,11 @@ module color$(  clk,
 				CSSValueYellowgreen,
 				PrimitiveClass,
 				CSS_IDENT,
+				CSS_RGBCOLOR,
 				inherited_color,
 				inherited_visited_color);
 	//implement: setPropertyHandler(CSSPropertyColor, ApplyPropertyColor<InheritFromParent, &RenderStyle::color, &RenderStyle::setColor, &RenderStyle::setVisitedLinkColor, &RenderStyle::invalidColor, RenderStyle::initialColor>::createHandler());
+	// Color is really just RGBA, each takes 8 bits (256 color), and they sit side by side in the final 32-bit wide value
 
 	// io signals
 	input clk, reset;
@@ -91,6 +94,7 @@ module color$(  clk,
 	input[31:0] document_visitedLink_color; // state.document()->visitedLinkColor()
 	input[31:0] document_link_color; // state.document()->linkColor()
 	input[31:0] document_activeLink_color; // state.document()->activeLinkColor();
+	input[31:0] m_value_rgbcolor; // m_value.rgbcolor
 	input[9:0] CSSValueMenu;
 	input[9:0] CSSValueAqua;
 	input[9:0] CSSValueBlack;
@@ -147,6 +151,7 @@ module color$(  clk,
 	input[9:0] CSSValueWhitesmoke;
 	input[9:0] CSSValueYellowgreen;
 	input[6:0] CSS_IDENT;
+	input[6:0] CSS_RGBCOLOR;
 	input[5:0] PrimitiveClass;
 	output[31:0] inherited_color; // inherited->color, where inherited is of type DataRef<StyleInheritedData>
 	output[31:0] inherited_visited_color; // inherited->visitedLinkcolor, where inherited is of type DataRef<StyleInheritedData>
@@ -178,12 +183,12 @@ module color$(  clk,
 				  parent_invalid_color,
 				  parent_color_isvalid);
 	mux2_32$ mux2(color_2apply,
-				  inherit_color_2apply,
 				  color_FromPrimitiveValue,
+				  inherit_color_2apply,
 				  sel_color_2apply);
 	mux2_32$ mux3(visited_color_2apply,
-				  inherit_color_2apply,
 				  visited_color_FromPrimitiveValue,
+				  inherit_color_2apply,
 				  sel_visited_color_2apply);
 
 	getIdent$ logic1(ident,
@@ -199,6 +204,8 @@ module color$(  clk,
 									document_link_color,
 									document_activeLink_color,
 									inherited_color,
+									m_value_rgbcolor,
+					 				m_primitiveUnitType,
 							    	CSSValueMenu,
 							    	CSSValueAqua,
 							    	CSSValueBlack,
@@ -253,7 +260,8 @@ module color$(  clk,
 							    	CSSValueOlivedrab,
 							    	CSSValueOrangered,
 							    	CSSValueWhitesmoke,
-							    	CSSValueYellowgreen); // colorFromPrimitiveValue(primitiveValue)
+							    	CSSValueYellowgreen,
+									CSS_RGBCOLOR); // colorFromPrimitiveValue(primitiveValue)
 	colorFromPrimitiveValue$ logic3(visited_color_FromPrimitiveValue,
 									ident,
 									1'b1,
@@ -263,6 +271,8 @@ module color$(  clk,
 									document_link_color,
 									document_activeLink_color,
 									inherited_color,
+									m_value_rgbcolor,
+					 				m_primitiveUnitType,
 							    	CSSValueMenu,
 							    	CSSValueAqua,
 							    	CSSValueBlack,
@@ -317,7 +327,8 @@ module color$(  clk,
 							    	CSSValueOlivedrab,
 							    	CSSValueOrangered,
 							    	CSSValueWhitesmoke,
-							    	CSSValueYellowgreen); // colorFromPrimitiveValue(primitiveValue, true)
+							    	CSSValueYellowgreen,
+									CSS_RGBCOLOR); // colorFromPrimitiveValue(primitiveValue, true)
 
 	dff_32$ dff1(color_2apply,
 				 inherited_color,

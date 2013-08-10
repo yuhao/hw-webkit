@@ -37,7 +37,7 @@ module mux2_1$ (out, a, b, s);
 	input a, b, s;
 	output out;
 
-	assign out = (s) ? a : b;
+	assign out = (~s) ? a : b;
 endmodule
 
 module mux2_32$ (out, a, b, s);
@@ -45,6 +45,6 @@ module mux2_32$ (out, a, b, s);
 	input s;
 	output[31:0] out;
 
-	assign out = (s) ? a : b;
+	assign out = (~s) ? a : b;
 endmodule
 

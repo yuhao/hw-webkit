@@ -56,8 +56,8 @@ module getIdent$(ident,
 					  m_primitiveUnitType,
 					  CSS_IDENT);
 	mux2_32$ mux1(ident,
-				  m_value_ident,
 				  32'b0,
+				  m_value_ident,
 				  is_css_ident);
 
 endmodule
@@ -217,13 +217,15 @@ endmodule
 
 module colorFromPrimitiveValue$(color_FromPrimitiveValue,
 								ident,
-								is_visitedLink,
+								for_visitedLink,
 								is_link_element,
 								document_text_color,
 								document_visitedLink_color,
 								document_link_color,
 								document_activeLink_color,
 								inherited_color,
+								m_value_rgbcolor,
+								m_primitiveUnitType,
 							    CSSValueMenu,
 							    CSSValueAqua,
 							    CSSValueBlack,
@@ -278,16 +280,19 @@ module colorFromPrimitiveValue$(color_FromPrimitiveValue,
 							    CSSValueOlivedrab,
 							    CSSValueOrangered,
 							    CSSValueWhitesmoke,
-							    CSSValueYellowgreen);
+							    CSSValueYellowgreen,
+								CSS_RGBCOLOR);
 
 	input[31:0] ident;
-	input is_visitedLink;
+	input for_visitedLink;
 	input is_link_element;
 	input[31:0] document_text_color;
 	input[31:0] document_visitedLink_color;
 	input[31:0] document_link_color;
 	input[31:0] document_activeLink_color;
 	input[31:0] inherited_color;
+	input[31:0] m_value_rgbcolor;
+	input[6:0] m_primitiveUnitType;
 	input[9:0] CSSValueMenu;
 	input[9:0] CSSValueAqua;
 	input[9:0] CSSValueBlack;
@@ -343,18 +348,21 @@ module colorFromPrimitiveValue$(color_FromPrimitiveValue,
 	input[9:0] CSSValueOrangered;
 	input[9:0] CSSValueWhitesmoke;
 	input[9:0] CSSValueYellowgreen;
+	input[6:0] CSS_RGBCOLOR;
 	output[31:0] color_FromPrimitiveValue;
 
-	reg[31:0] color_FromPrimitiveValue;
+	reg[31:0] non_specific_RGB;
 
 	wire[31:0] document_final_link_color;
 	wire[31:0] focus_ring_color;
 	wire[31:0] color_for_value;
+	wire[31:0] RGB_color;
+	wire is_RGBColor;
 
-	mux2_32$ logic1(document_final_link_color,
-					document_visitedLink_color,
+	mux2_32$ mux1(document_final_link_color,
 					document_link_color,
-					is_link_element & is_visitedLink);
+					document_visitedLink_color,
+					is_link_element & for_visitedLink);
 
 	colorForCSSValue$ logic2(color_for_value,
 							 CSSValueMenu,
@@ -414,15 +422,24 @@ module colorFromPrimitiveValue$(color_FromPrimitiveValue,
 	always @(ident)
 	begin
 		case(ident[9:0])
-			0: assign color_FromPrimitiveValue = 32'b0;
-			CSSValueWebkitText: assign color_FromPrimitiveValue = document_text_color;
-			CSSValueWebkitLink: assign color_FromPrimitiveValue = document_final_link_color;
-			CSSValueWebkitActivelink: assign color_FromPrimitiveValue = document_activeLink_color;
-			CSSValueWebkitFocusRingColor: assign color_FromPrimitiveValue = focus_ring_color;
-			CSSValueCurrentcolor: assign color_FromPrimitiveValue = inherited_color;
-			default: assign color_FromPrimitiveValue = color_for_value;
+			0: assign non_specific_RGB = 32'b0;
+			CSSValueWebkitText: assign non_specific_RGB = document_text_color;
+			CSSValueWebkitLink: assign non_specific_RGB = document_final_link_color;
+			CSSValueWebkitActivelink: assign non_specific_RGB = document_activeLink_color;
+			CSSValueWebkitFocusRingColor: assign non_specific_RGB = focus_ring_color;
+			CSSValueCurrentcolor: assign non_specific_RGB = inherited_color;
+			default: assign non_specific_RGB = color_for_value;
 		endcase
 	end
+
+	comp2_7to1$ comp1(is_RGBColor,
+					  m_primitiveUnitType,
+					  CSS_RGBCOLOR);
+	assign RGB_color = m_value_rgbcolor; // Color(value->getRGBA32Value())
+	mux2_32$ mux2(color_FromPrimitiveValue,
+				  non_specific_RGB,
+				  RGB_color,
+				  is_RGBColor);
 
 endmodule
 

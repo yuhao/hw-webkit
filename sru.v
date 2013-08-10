@@ -19,6 +19,7 @@ module TOP();
 	reg[31:0] document_visitedLink_color;
 	reg[31:0] document_link_color;
 	reg[31:0] document_activeLink_color;
+	reg[31:0] m_value_rgbcolor;
 	// output
 	wire[58:0] noninherited_flags;
 	wire[31:0] inherited_color;
@@ -90,6 +91,7 @@ module TOP();
 	wire[9:0] CSSValueYellowgreen = 10'd722;
 	// enum consts for UnitTypes in css/CSSPrimitiveValue.h
 	wire[6:0] CSS_IDENT = 7'd21;
+	wire[6:0] CSS_RGBCOLOR = 7'd25;
 
 	display$ display_logic( clk,
 							reset,
@@ -120,6 +122,7 @@ module TOP();
 						document_visitedLink_color,
 						document_link_color,
 						document_activeLink_color,
+						m_value_rgbcolor,
 						CSSValueMenu,
 						CSSValueAqua,
 						CSSValueBlack,
@@ -177,6 +180,7 @@ module TOP();
 						CSSValueYellowgreen,
 						PrimitiveClass,
 						CSS_IDENT,
+						CSS_RGBCOLOR,
 						inherited_color,
 						inherited_visited_color);
 
@@ -194,7 +198,7 @@ module TOP();
 		// Color
 		InheritFromParent = 1'b1;
 		m_primitiveUnitType = 7'd21; // make it match CSS_IDENT
-		m_value_ident = 32'h1234ABCD;
+		m_value_ident = CSSValueWebkitLink;
 		m_state_applyPropertyToRegularStyle = 1'b1;
 		m_applyPropertyToVisitedLinkStyle = 1'b1;
 		parent_color_isvalid = 1'b1;
@@ -205,6 +209,7 @@ module TOP();
 		document_visitedLink_color = CSSValueLimegreen;
 		document_link_color = CSSValueLimegreen;
 		document_activeLink_color = CSSValueLimegreen;
+		m_value_rgbcolor = 32'h1234ABCD;
 
 		#1
 		reset = 1'b1;
