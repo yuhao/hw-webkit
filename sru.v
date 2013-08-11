@@ -90,8 +90,85 @@ module TOP();
 	wire[9:0] CSSValueWhitesmoke = 10'd721;
 	wire[9:0] CSSValueYellowgreen = 10'd722;
 	// enum consts for UnitTypes in css/CSSPrimitiveValue.h
-	wire[6:0] CSS_IDENT = 7'd21;
-	wire[6:0] CSS_RGBCOLOR = 7'd25;
+ 	wire[6:0] CSS_UNKNOWN = 7'd0;
+    wire[6:0] CSS_NUMBER = 7'd1;
+    wire[6:0] CSS_PERCENTAGE = 7'd2;
+    wire[6:0] CSS_EMS = 7'd3;
+    wire[6:0] CSS_EXS = 7'd4;
+    wire[6:0] CSS_PX = 7'd5;
+    wire[6:0] CSS_CM = 7'd6;
+    wire[6:0] CSS_MM = 7'd7;
+    wire[6:0] CSS_IN = 7'd8;
+    wire[6:0] CSS_PT = 7'd9;
+    wire[6:0] CSS_PC = 7'd10;
+    wire[6:0] CSS_DEG = 7'd11;
+    wire[6:0] CSS_RAD = 7'd12;
+    wire[6:0] CSS_GRAD = 7'd13;
+    wire[6:0] CSS_MS = 7'd14;
+    wire[6:0] CSS_S = 7'd15;
+    wire[6:0] CSS_HZ = 7'd16;
+    wire[6:0] CSS_KHZ = 7'd17;
+    wire[6:0] CSS_DIMENSION = 7'd18;
+    wire[6:0] CSS_STRING = 7'd19;
+    wire[6:0] CSS_URI = 7'd20;
+    wire[6:0] CSS_IDENT = 7'd21;
+    wire[6:0] CSS_ATTR = 7'd22;
+    wire[6:0] CSS_COUNTER = 7'd23;
+    wire[6:0] CSS_RECT = 7'd24;
+    wire[6:0] CSS_RGBCOLOR = 7'd25;
+    wire[6:0] CSS_VW = 7'd26;
+    wire[6:0] CSS_VH = 7'd27;
+    wire[6:0] CSS_VMIN = 7'd28;
+    wire[6:0] CSS_VMAX = 7'd29;
+    wire[6:0] CSS_DPPX = 7'd30;
+    wire[6:0] CSS_DPI = 7'd31;
+    wire[6:0] CSS_DPCM = 7'd32;
+    wire[6:0] CSS_PAIR = 7'd33;
+    wire[6:0] CSS_UNICODE_RANGE = 7'd34;
+    wire[6:0] CSS_PARSER_OPERATOR = 7'd35;
+    wire[6:0] CSS_PARSER_INTEGER = 7'd36;
+    wire[6:0] CSS_PARSER_HEXCOLOR = 7'd37;
+    wire[6:0] CSS_PARSER_IDENTIFIER = 7'd38;
+    wire[6:0] CSS_TURN = 7'd39;
+    wire[6:0] CSS_REMS = 7'd40;
+    wire[6:0] CSS_CHS = 7'd41;
+	wire[6:0] CSS_COUNTER_NAME = 7'd42;
+    wire[6:0] CSS_SHAPE = 7'd43;
+    wire[6:0] CSS_QUAD = 7'd44;
+    wire[6:0] CSS_CALC = 7'd45;
+    wire[6:0] CSS_CALC_PERCENTAGE_WITH_NUMBER = 7'd46;
+    wire[6:0] CSS_CALC_PERCENTAGE_WITH_LENGTH = 7'd47;
+    wire[6:0] CSS_VARIABLE_NAME = 7'd48;
+	// enum consts for CalculationCategory in css/CSSCalculationValue.h
+	wire[2:0] CalcNumber = 3'd0;
+    wire[2:0] CalcLength = 3'd1;
+    wire[2:0] CalcPercent = 3'd2;
+    wire[2:0] CalcPercentNumber = 3'd3;
+    wire[2:0] CalcPercentLength = 3'd4;
+    wire[2:0] CalcVariable = 3'd5;
+    wire[2:0] CalcOther = 3'd6;
+	// consts defined in css/CSSPrimitiveValue.cpp
+	wire[31:0] maxValueForCssLength = 32'd33554429; // INT_MAX / kFixedPointDenominator - 2;
+	wire[31:0] minValueForCssLength = 32'd4261412866; // INT_MIN / kFixedPointDenominator + 2; This is negative number
+	// const defined in css/CSSHelper.h
+	wire[31:0] cssPixelsPerInch = 96; // float cssPixelsPerInch = 96;
+	// enum consts for LengthType in platform/Length.h
+	wire[4:0] Auto = 5'd0;
+	wire[4:0] Relative = 5'd1;
+	wire[4:0] Percent = 5'd2;
+	wire[4:0] Fixed = 5'd3;
+	wire[4:0] Intrinsic = 5'd4;
+	wire[4:0] MinIntrinsic = 5'd5;
+	wire[4:0] MinContent = 5'd6;
+	wire[4:0] MaxContent = 5'd7;
+	wire[4:0] FillAvailable = 5'd8;
+	wire[4:0] FitContent = 5'd9;
+	wire[4:0] Calculated = 5'd10;
+	wire[4:0] ViewportPercentageWidth = 5'd12;
+	wire[4:0] ViewportPercentageHeight = 5'd13;
+	wire[4:0] ViewportPercentageMin = 5'd14;
+	wire[4:0] ViewportPercentageMax = 5'd15;
+	wire[4:0] Undefined = 5'd16;
 
 	display$ display_logic( clk,
 							reset,

@@ -443,7 +443,205 @@ module colorFromPrimitiveValue$(color_FromPrimitiveValue,
 
 endmodule
 
+module primitiveType$ (primary_type, m_value_calc_category, m_primitiveUnitType, CSS_CALC, CSS_NUMBER, CSS_PERCENTAGE, CSS_PX, CSS_CALC_PERCENTAGE_WITH_NUMBER, CSS_CALC_PERCENTAGE_WITH_LENGTH, CSS_UNKNOWN, CalcNumber, CalcPercent, CalcLength, CalcPercentNumber, CalcPercentLength, CalcVariable, CalcOther);
+
+	input[6:0] m_primitiveUnitType;
+	input[2:0] m_value_calc_category;
+	input[6:0] CSS_CALC;
+	input[6:0] CSS_PX;
+	input[6:0] CSS_CALC_PERCENTAGE_WITH_LENGTH;
+	input[6:0] CSS_CALC_PERCENTAGE_WITH_NUMBER;
+	input[6:0] CSS_NUMBER;
+	input[6:0] CSS_PERCENTAGE;
+	input[6:0] CSS_UNKONWN;
+	input[2:0] CalcNumber;
+    input[2:0] CalcLength;
+    input[2:0] CalcPercent;
+    input[2:0] CalcPercentNumber;
+    input[2:0] CalcPercentLength;
+    input[2:0] CalcVariable;
+    input[2:0] CalcOther;
+	output[6:0] primary_type;
+
+	reg[6:0] temp_value;
+	wire temp_sel;
+
+	comp2_7to1$ comp1(temp_sel, m_primitiveUnitType, CSS_CALC);
+	mux2_7 mux1(primary_type, m_primitiveUnitType, temp_value, temp_sel)
+
+	always @*
+	begin
+		case(m_value_calc_category)
+			CalcNumber: temp_value = CSS_NUMBER;
+			CalcPercent: temp_value = CSS_PERCENTAGE;
+			CalcLength: temp_value = CSS_PX;
+			CalcPercentNumber: temp_value = CSS_CALC_PERCENTAGE_WITH_NUMBER;
+			CalcPercentLength: temp_value = CSS_CALC_PERCENTAGE_WITH_LENGTH;
+			CalcVariable: temp_value = CSS_UNKNOWN;
+			CalcOther: temp_value = CSS_UNKNOWN;
+			default: temp_value = CSS_UNKNOWN;
+		endcase
+	end
+
+endmodule
+
+module getDoubleValue$(doubleValue, m_primitiveUnitType, CSS_CALC, m_value_calc_doublevalue, m_value_num); // CSSPrimitiveValue::getDoubleValue()
+
+	input[31:0] m_value_calc_doublevalue, m_value_num; // double
+	input[6:0] m_primitiveUnitType;
+	input[6:0] CSS_CALC;
+	output[31:0] doubleValue;
+
+	wire sel;
+
+	comp2_7to1$ comp1(sel, m_primitiveUnitType, CSS_CALC);
+	mux2_32$ mux1(doubleValue, m_value_num, m_value_calc_doublevalue, sel);
+
+endmodule
+
+module isFontRelativeLength$(is_fontrelativelength, m_primitiveUnitType, CSS_EMS, CSS_EXS, CSS_REMS, CSS_CHS);
+
+	input[6:0] m_primitiveUnitType;
+	input[6:0] CSS_EMS;
+	input[6:0] CSS_EXS;
+	input[6:0] CSS_REMS;
+	input[6:0] CSS_CHS;
+	output is_fontrelativelength;
+
+	wire match1, match2, match3, match4;
+
+	comp2_7to1$ comp1(match1, m_primitiveUnitType, CSS_EMS);
+	comp2_7to1$ comp2(match2, m_primitiveUnitType, CSS_EXS);
+	comp2_7to1$ comp3(match3, m_primitiveUnitType, CSS_REMS);
+	comp2_7to1$ comp4(match4, m_primitiveUnitType, CSS_CHS);
+
+	assign is_fontrelativelength = match1 | match2 | match3 | match4;
+	
+endmodule
+
+module clampTo$(compute_length_float, compute_length_double, maxValueForCssLength, minValueForCssLength);
+
+	input[31:0] compute_length_double;
+	input[31:0] maxValueForCssLength, minValueForCssLength;
+	output[31:0] compute_length_float;
+
+	assign compute_length_float = compute_length_double; // just do this as of now..
+
+endmodule
+
+`define LENGTH_TYPE_SIZE 42
+module makeLength$(compute_length, compute_length_float, type, quirk, is_float);
+
+	parameter Length_size = LENGTH_TYPE_SIZE;
+
+	input[31:0] compute_length_float,
+	input[7:0] type;
+	input quirk, is_float;
+	output[Length_size - 1:0] compute_length;
+
+	assign compute_length = {compute_length_float, type, quirk, is_float};
+
+endmodule
+
 /* used in FontSize */
+module computeLength();
+	// implements: Length CSSPrimitiveValue::computeLength(RenderStyle* style, RenderStyle* rootStyle, float multiplier, bool computingFontSize)
+	// we don't do this part: if (m_primitiveUnitType == CSS_CALC) return m_value.calc->computeLengthPx(style, rootStyle, multiplier, computingFontSize);
+
+	parameter Length_size = LENGTH_TYPE_SIZE;
+
+	input[31:0] multipler; // float
+	input computingFontSize;
+	input has_rootstyle; // rootStyle
+	input[6:0] m_primitiveUnitType;
+	input[6:0] CSS_CALC;
+	input[6:0] CSS_EMS;
+	input[6:0] CSS_EXS;
+	input[6:0] CSS_REMS;
+	input[6:0] CSS_CHS;
+	input[6:0] CSS_PX;
+	input[6:0] CSS_CM;
+	input[6:0] CSS_MM;
+	input[6:0] CSS_IN;
+	input[6:0] CSS_PT;
+	input[6:0] CSS_PC;
+	input[6:0] CSS_CALC_PERCENTAGE_WITH_LENGTH;
+	input[6:0] CSS_CALC_PERCENTAGE_WITH_NUMBER;
+	input[6:0] CSS_NUMBER;
+	input[6:0] CSS_PERCENTAGE;
+	input[6:0] CSS_UNKONWN;
+	input[2:0] CalcNumber;
+    input[2:0] CalcLength;
+    input[2:0] CalcPercent;
+    input[2:0] CalcPercentNumber;
+    input[2:0] CalcPercentLength;
+    input[2:0] CalcVariable;
+    input[2:0] CalcOther;
+	input[31:0] m_specifiedSize; // float, style->fontDescription().specifiedSize()
+	input[31:0] m_computedSize; // float, style->fontDescription().computedSize()
+	input[31:0] m_root_specifiedSize; // float, rootStyle->fontDescription().specifiedSize()
+	input[31:0] m_root_computedSize; // float, rootStyle->fontDescription().computedSize()
+	input m_fontmetrics_hasXHeight; // style->fontMetrics().hasXHeight()
+	input[31:0] m_fontmetrics_XHeight; // style->fontMetrics().xHeight()
+	input[31:0] m_fontmetrics_zeroWidth; // style->fontMetrics().zeroWidth()
+	input[31:0] cssPixelsPerInch; // float
+	input[2:0] m_value_calc_category; // m_value.calc->category()
+	input[31:0] m_value_calc_doublevalue; // double, m_value.calc->doubleValue()
+	input[31:0] m_value_num; // double, m_value.num
+	input[31:0] minValueForCssLength; // minValueForCssLength;
+	input[31:0] maxValueForCssLength; // maxValueForCssLength
+	input[4:0] Fixed;
+	output[Length_size - 1:0] compute_length;
+
+	reg[31:0] factor; // float
+	reg[31:0] result; // double
+	reg[31:0] scaled_result; // double
+
+	wire[6:0] primary_type;
+	wire[31:0] doubleValue;
+	wire is_fontrelativelength;
+	wire[31:0] compute_length_double; // double
+	wire[31:0] compute_length_float; // float 
+
+	always @*
+	begin
+		case(primary_type)
+			CSS_EMS: factor = computingFontSize ? m_specifiedSize : m_computedSize;
+        	CSS_EXS:
+        	    if(m_fontmetrics_XHeight) begin factor = m_fontmetrics_XHeight; end
+        	    else begin factor = (computingFontSize ? m_specifiedSize : m_computedSize) / 2.0; end
+        	CSS_REMS:
+        	   	if(rootStyle) begin factor = computingFontSize ? m_root_specifiedSize : m_root_computedSize; end
+        	    else begin factor = 1.0; end
+        	CSS_CHS: factor = m_fontmetrics_zeroWidth;
+        	CSS_PX: factor = 1.0;
+        	CSS_CM: factor = cssPixelsPerInch / 2.54; // (2.54 cm/in)
+        	CSS_MM: factor = cssPixelsPerInch / 25.4;
+        	CSS_IN: factor = cssPixelsPerInch;
+        	CSS_PT: factor = cssPixelsPerInch / 72.0;
+        	CSS_PC: factor = cssPixelsPerInch * 12.0 / 72.0; // 1 pc == 12 pt
+			// not reachable
+        	CSS_CALC_PERCENTAGE_WITH_LENGTH: factor = 32'hFFFFFFFF;
+        	CSS_CALC_PERCENTAGE_WITH_NUMBER: factor = 32'hFFFFFFFF;
+        	default: factor = 32'hFFFFFFFF;
+		endcase
+	end
+
+	always @*
+	begin
+		result <= doubleValue * factor;
+		scaled_result <= result * multipler;
+	end
+
+	primitiveType$ logic1(primary_type, m_value_calc_category, m_primitiveUnitType, CSS_CALC, CSS_NUMBER, CSS_PERCENTAGE, CSS_PX, CSS_CALC_PERCENTAGE_WITH_NUMBER, CSS_CALC_PERCENTAGE_WITH_LENGTH, CSS_UNKNOWN, CalcNumber, CalcPercent, CalcLength, CalcPercentNumber, CalcPercentLength, CalcVariable, CalcOther);
+	getDoubleValue$ logic2(doubleValue, m_primitiveUnitType, CSS_CALC, m_value_calc_doublevalue, m_value_num); // CSSPrimitiveValue::getDoubleValue()
+	isFontRelativeLength$ logic3(is_fontrelativelength, m_primitiveUnitType, CSS_EMS, CSS_EXS, CSS_REMS, CSS_CHS); // bool isFontRelativeLength()
+	mux2_32$ mux1(compute_length_double, scaled_result, result, computingFontSize | is_fontrelativelength);
+	clampTo$ clamp1(compute_length_float, compute_length_double, maxValueForCssLength, minValueForCssLength); // template<typename T> inline T clampTo(double value, T min = defaultMinimumForClamp<T>(), T max = defaultMaximumForClamp<T>()) in wtf/MathExtras.h
+	makeLength$ length1(compute_length, compute_length_float, {3'b0, Fixed}, 1'b0, 1'b1);
+
+endmodule
+
 //module useFixedDefaultSize$(shouldUseFixedDefaultSize, m_genericFamily, MonospaceFamily, font_family, monospaceFamily);
 //	(font_family == monospaceFamily); // this is actually a complex point chasing function (refer to platform/graphics/FontFamily.cpp where "==" is overloaded).  We simplify it here.
 //endmodule
