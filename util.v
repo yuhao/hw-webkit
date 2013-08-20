@@ -453,7 +453,7 @@ module primitiveType$ (primary_type, m_value_calc_category, m_primitiveUnitType,
 	input[6:0] CSS_CALC_PERCENTAGE_WITH_NUMBER;
 	input[6:0] CSS_NUMBER;
 	input[6:0] CSS_PERCENTAGE;
-	input[6:0] CSS_UNKONWN;
+	input[6:0] CSS_UNKNOWN;
 	input[2:0] CalcNumber;
     input[2:0] CalcLength;
     input[2:0] CalcPercent;
@@ -467,7 +467,7 @@ module primitiveType$ (primary_type, m_value_calc_category, m_primitiveUnitType,
 	wire temp_sel;
 
 	comp2_7to1$ comp1(temp_sel, m_primitiveUnitType, CSS_CALC);
-	mux2_7 mux1(primary_type, m_primitiveUnitType, temp_value, temp_sel)
+	mux2_7 mux1(primary_type, m_primitiveUnitType, temp_value, temp_sel);
 
 	always @*
 	begin

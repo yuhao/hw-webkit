@@ -6,9 +6,12 @@ module dff_59$(d, q, reset, clock, enable);
 
 	reg[58:0] q;
 
-	always @(posedge clock) begin if(enable) q = d; end
 	// async reset
-	always @(reset) begin if(reset) q = 0; end
+	always @(posedge clock or posedge reset)
+	begin
+		if(reset) q = 0;
+		else if(enable) q = d;
+	end
 
 endmodule
 
@@ -20,9 +23,12 @@ module dff_32$(d, q, reset, clock, enable);
 
 	reg[31:0] q;
 
-	always @(posedge clock) begin if(enable) q = d; end
 	// async reset
-	always @(reset) begin if(reset) q = 0; end
+	always @(posedge clock or posedge reset)
+	begin
+		if(reset) q = 0;
+		else if(enable) q = d;
+	end
 
 endmodule
 
@@ -44,6 +50,14 @@ module mux2_32$ (out, a, b, s);
 	input[31:0] a, b;
 	input s;
 	output[31:0] out;
+
+	assign out = (~s) ? a : b;
+endmodule
+
+module mux2_7$ (out, a, b, s);
+	input[6:0] a, b;
+	input s;
+	output[6:0] out;
 
 	assign out = (~s) ? a : b;
 endmodule
