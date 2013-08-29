@@ -53,23 +53,10 @@ module color$(  clk,
 				CSSValueInactivecaptiontext,
 				CSSValueInfobackground,
 				CSSValueInfotext,
-				CSSValueMenutext,
     			CSSValueWebkitFocusRingColor,
     			CSSValueCurrentcolor,
 				CSSValueGrey,
     			CSSValueWebkitText,
-				CSSValueMenulist,
-				CSSValueMenulistButton,
-				CSSValueMenulistText,
-				CSSValueMenulistTextfield,
-				CSSValueAquamarine,
-				CSSValueBlueviolet,
-				CSSValueGreenyellow,
-				CSSValueLimegreen,
-				CSSValueOlivedrab,
-				CSSValueOrangered,
-				CSSValueWhitesmoke,
-				CSSValueYellowgreen,
 				PrimitiveClass,
 				CSS_IDENT,
 				CSS_RGBCOLOR,
@@ -133,23 +120,10 @@ module color$(  clk,
 	input[9:0] CSSValueInactivecaptiontext;
 	input[9:0] CSSValueInfobackground;
 	input[9:0] CSSValueInfotext;
-	input[9:0] CSSValueMenutext;
     input[9:0] CSSValueWebkitFocusRingColor;
     input[9:0] CSSValueCurrentcolor;
 	input[9:0] CSSValueGrey;
     input[9:0] CSSValueWebkitText;
-	input[9:0] CSSValueMenulist;
-	input[9:0] CSSValueMenulistButton;
-	input[9:0] CSSValueMenulistText;
-	input[9:0] CSSValueMenulistTextfield;
-	input[9:0] CSSValueAquamarine;
-	input[9:0] CSSValueBlueviolet;
-	input[9:0] CSSValueGreenyellow;
-	input[9:0] CSSValueLimegreen;
-	input[9:0] CSSValueOlivedrab;
-	input[9:0] CSSValueOrangered;
-	input[9:0] CSSValueWhitesmoke;
-	input[9:0] CSSValueYellowgreen;
 	input[6:0] CSS_IDENT;
 	input[6:0] CSS_RGBCOLOR;
 	input[5:0] PrimitiveClass;
@@ -244,23 +218,10 @@ module color$(  clk,
 							    	CSSValueInactivecaptiontext,
 							    	CSSValueInfobackground,
 							    	CSSValueInfotext,
-							    	CSSValueMenutext,
     						    	CSSValueWebkitFocusRingColor,
     						    	CSSValueCurrentcolor,
 							    	CSSValueGrey,
     						    	CSSValueWebkitText,
-							    	CSSValueMenulist,
-							    	CSSValueMenulistButton,
-							    	CSSValueMenulistText,
-							    	CSSValueMenulistTextfield,
-							    	CSSValueAquamarine,
-							    	CSSValueBlueviolet,
-							    	CSSValueGreenyellow,
-							    	CSSValueLimegreen,
-							    	CSSValueOlivedrab,
-							    	CSSValueOrangered,
-							    	CSSValueWhitesmoke,
-							    	CSSValueYellowgreen,
 									CSS_RGBCOLOR); // colorFromPrimitiveValue(primitiveValue)
 	colorFromPrimitiveValue$ logic3(visited_color_FromPrimitiveValue,
 									ident,
@@ -311,23 +272,10 @@ module color$(  clk,
 							    	CSSValueInactivecaptiontext,
 							    	CSSValueInfobackground,
 							    	CSSValueInfotext,
-							    	CSSValueMenutext,
     						    	CSSValueWebkitFocusRingColor,
     						    	CSSValueCurrentcolor,
 							    	CSSValueGrey,
     						    	CSSValueWebkitText,
-							    	CSSValueMenulist,
-							    	CSSValueMenulistButton,
-							    	CSSValueMenulistText,
-							    	CSSValueMenulistTextfield,
-							    	CSSValueAquamarine,
-							    	CSSValueBlueviolet,
-							    	CSSValueGreenyellow,
-							    	CSSValueLimegreen,
-							    	CSSValueOlivedrab,
-							    	CSSValueOrangered,
-							    	CSSValueWhitesmoke,
-							    	CSSValueYellowgreen,
 									CSS_RGBCOLOR); // colorFromPrimitiveValue(primitiveValue, true)
 
 	dff_32$ dff1(color_2apply,
